@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Devotional App</title>
+  <style>
+    body {
+      background-color: #eceded;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Your main h1 style */
+    .main-text {
+      font-family: 'Times New Roman', Times, serif;
+      letter-spacing: -2px;
+      font-weight: 300;
+      font-size: 45px;
+      text-align: center;
+      margin-top: 60px;
+      color: #222;
+      user-select: none;
+    }
+
+    .sub-text {
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: -1px;
+      font-weight: 300;
+      text-align: center;
+      margin-top: -1px;
+      color: #222;
+    }
+
+    #devotional {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 20px;
+      font-family: Georgia, serif;
+      padding: 10px 20px;
+      color: #222;
+    }
+
+    /* Loading overlay styles */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: #eceded;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      user-select: none;
+      opacity: 0;
+      filter: blur(8px);
+      transition: opacity 1.5s ease, filter 1.5s ease;
+    }
+
+    #loading-overlay.show {
+      opacity: 1;
+      filter: blur(0);
+    }
+
+    /* Name input prompt */
+    #name-prompt {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 100px;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    #name-prompt input {
+      padding: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      margin-top: 10px;
+      background-color: white;
+      font-family: Arial, sans-serif;
+      width: 250px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #name-prompt button {
+      margin-top: 15px;
+      padding: 8px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #333;
+      color: white;
+      cursor: pointer;
+    }
+
+    #name-prompt button:hover {
+      background-color: #555;
+    }
+
+    /* Fade + blur animation classes */
+    .fade-blur-in {
+      opacity: 0;
+      filter: blur(8px);
+      transition: opacity 1.2s ease, filter 1.2s ease;
+    }
+    .fade-blur-in.show {
+      opacity: 1;
+      filter: blur(0);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Loading screen with big 'john' -->
+  <div id="loading-overlay">
+    <h1 class="main-text" style="font-size: 70px; color: #222;">john</h1>
+  </div>
+
+  <!-- Name input prompt -->
+  <div id="name-prompt">
+    <h2>What’s your name?</h2>
+    <input type="text" id="name-input" placeholder="Type your name..." />
+    <button onclick="saveName()">Continue</button>
+  </div>
+
+  <!-- Main devotional content -->
+  <h1 class="main-text fade-blur-in" id="username" style="display:none;"></h1>
+  <h3 class="sub-text fade-blur-in" id="subtitle" style="display:none;">the word of today:</h3>
+  <div id="devotional" class="fade-blur-in" style="display:none;">Loading...</div>
+
+  <script>
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const namePrompt = document.getElementById('name-prompt');
+    const usernameEl = document.getElementById('username');
+    const subtitleEl = document.getElementById('subtitle');
+    const devotionalEl = document.getElementById('devotional');
+
+    function showDevotional(username) {
+      usernameEl.textContent = `Hello, ${username}`;
+      usernameEl.style.display = 'block';
+      subtitleEl.style.display = 'block';
+      devotionalEl.style.display = 'block';
+
+      usernameEl.classList.add('fade-blur-in');
+      subtitleEl.classList.add('fade-blur-in');
+      devotionalEl.classList.add('fade-blur-in');
+
+      // Trigger animation
+      setTimeout(() => {
+        usernameEl.classList.add('show');
+        subtitleEl.classList.add('show');
+        devotionalEl.classList.add('show');
+      }, 100);
+
+      const bibleVerses = [
+        "Psalm 23:1 – The Lord is my shepherd, I lack nothing.",
+        "John 3:16 – For God so loved the world...",
+        "Isaiah 41:10 – Do not fear, for I am with you.",
+        "Proverbs 3:5 – Trust in the Lord with all your heart.",
+        "Romans 8:28 – All things work together for good...",
+        "Matthew 5:14 – You are the light of the world.",
+        "Joshua 1:9 – Be strong and courageous.",
+        "Philippians 4:13 – I can do all things through Christ...",
+        "Hebrews 11:1 – Faith is the assurance of things hoped for...",
+        "1 Peter 5:7 – Cast all your anxiety on Him..."
+      ];
+
+      const today = new Date().toISOString().slice(0, 10);
+      const seed = parseInt(today.replace(/-/g, ""));
+      const index = seed % bibleVerses.length;
+      devotionalEl.textContent = bibleVerses[index];
+    }
+
+    function saveName() {
+      const input = document.getElementById('name-input').value.trim();
+      if (!input) return alert('Please enter your name.');
+
+      localStorage.setItem('user', input);
+      namePrompt.style.display = 'none';
+      showDevotional(input);
+    }
+
+    window.addEventListener('load', () => {
+      // Show loading with animation
+      loadingOverlay.style.opacity = '1';
+      loadingOverlay.style.filter = 'blur(0)';
+
+      setTimeout(() => {
+        // Fade out loading screen
+        loadingOverlay.style.transition = 'opacity 1.5s ease, filter 1.5s ease';
+        loadingOverlay.style.opacity = '0';
+        loadingOverlay.style.filter = 'blur(8px)';
+
+        loadingOverlay.addEventListener('transitionend', () => {
+          loadingOverlay.style.display = 'none';
+
+          const storedName = localStorage.getItem('user');
+          if (storedName) {
+            showDevotional(storedName);
+          } else {
+            namePrompt.style.display = 'flex';
+          }
+        }, { once: true });
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
