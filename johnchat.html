@@ -160,19 +160,18 @@
       }, 100);
 
       const bibleVerses = [
-        "Psalm 23:1 – The Lord is my shepherd, I lack nothing.",
-        "John 3:16 – For God so loved the world...",
-        "Isaiah 41:10 – Do not fear, for I am with you.",
-        "Proverbs 3:5 – Trust in the Lord with all your heart.",
-        "Romans 8:28 – All things work together for good...",
-        "Matthew 5:14 – You are the light of the world.",
-        "Joshua 1:9 – Be strong and courageous.",
-        "Philippians 4:13 – I can do all things through Christ...",
-        "Hebrews 11:1 – Faith is the assurance of things hoped for...",
-        "1 Peter 5:7 – Cast all your anxiety on Him...",
-        "John 8:12 - When Jesus spoke again to the people, he said, “I am the light of the world. Whoever follows me will never walk in darkness, but will have the light of life.”"
-      ];
-
+  "Psalm 23:1 – The Lord is my shepherd, I lack nothing.",
+  "John 3:16 – For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.",
+  "Isaiah 41:10 – So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.",
+  "Proverbs 3:5 – Trust in the Lord with all your heart and lean not on your own understanding.",
+  "Romans 8:28 – And we know that in all things God works for the good of those who love him, who have been called according to his purpose.",
+  "Matthew 5:14 – You are the light of the world. A town built on a hill cannot be hidden.",
+  "Joshua 1:9 – Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.",
+  "Philippians 4:13 – I can do all this through him who gives me strength.",
+  "Hebrews 11:1 – Now faith is confidence in what we hope for and assurance about what we do not see.",
+  "1 Peter 5:7 – Cast all your anxiety on him because he cares for you.",
+  "John 8:12 – When Jesus spoke again to the people, he said, 'I am the light of the world. Whoever follows me will never walk in darkness, but will have the light of life.'"
+];
       const today = new Date().toISOString().slice(0, 10);
       const seed = parseInt(today.replace(/-/g, ""));
       const index = seed % bibleVerses.length;
