@@ -1,21 +1,144 @@
-<!DOCTYPE html>
-<html lang="en">
+
+   <!DOCTYPE html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Devotional</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>john - your devotional website</title>
   <style>
     body {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      font-family: 'Georgia', serif;
+      background-color: #eceded;
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .main-text {
+      font-family: 'Times New Roman', Times, serif;
+      letter-spacing: -2px;
+      font-weight: 300;
+      font-size: 45px;
+      text-align: center;
+      margin-top: 60px;
+      color: #222;
+      user-select: none;
+    }
+
+    .sub-text {
+      font-family: Arial, Helvetica, sans-serif;
+      letter-spacing: -1px;
+      font-weight: 300;
+      text-align: center;
+      margin-top: -1px;
+      color: #222;
+    }
+
+    #devotional {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 20px;
+      font-family: Georgia, serif;
+      padding: 10px 20px;
+      color: #222;
+    }
+
+    .minimal-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 6px;
+      color: #222;
+      transition: transform 0.2s ease;
+    }
+
+    .minimal-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .close-btn {
+      margin-top: 10px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #444;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #000;
+    }
+
+    #devotional-box {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    #devotional-text {
+      font-size: 18px;
+      font-family: Georgia, serif;
+      color: #222;
+      padding: 0 20px;
+    }
+
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: #eceded;
       display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      user-select: none;
+      opacity: 0;
+      filter: blur(8px);
+      transition: opacity 1.5s ease, filter 1.5s ease;
+    }
+
+    #loading-overlay.show {
+      opacity: 1;
+      filter: blur(0);
+    }
+
+    #name-prompt {
+      display: none;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
+      margin-top: 100px;
+      font-family: 'Times New Roman', Times, serif;
+      letter-spacing: -2px;
+    }
+
+    #name-prompt input {
+      padding: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      margin-top: 10px;
+      background-color: white;
+      font-family: Arial, sans-serif;
+      width: 250px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #name-prompt button {
+      margin-top: 15px;
+      padding: 8px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #333;
       color: white;
-      padding: 20px;
-      box-sizing: border-box;
+      cursor: pointer;
+      font-family: 'Times New Roman', Times, serif;
+      letter-spacing: -2px;
+    }
+
+    #name-prompt button:hover {
+      background-color: #555;
     }
 
     .fade-blur-in {
@@ -27,78 +150,6 @@
     .fade-blur-in.show {
       opacity: 1;
       filter: blur(0);
-    }
-
-    #nameInputContainer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    #usernameInput {
-      padding: 10px 15px;
-      border-radius: 5px;
-      border: none;
-      font-size: 16px;
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: none;
-      background-color: #1e3a5f;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #274a73;
-    }
-
-    .main-text {
-      font-size: 2.5em;
-      margin: 10px 0;
-      text-align: center;
-    }
-
-    .sub-text {
-      font-size: 1.2em;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    #devotional {
-      font-size: 1.1em;
-      text-align: center;
-      max-width: 600px;
-    }
-
-    #book-icon {
-      font-size: 26px;
-      cursor: pointer;
-      margin-top: 15px;
-      display: none;
-      transition: transform 0.3s ease;
-    }
-
-    #book-icon:hover {
-      transform: scale(1.1);
-    }
-
-    #devotional-box {
-      display: none;
-      position: relative;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      padding: 25px;
-      margin-top: 25px;
-      text-align: left;
-      max-width: 600px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
 
     .fade-in-devotional {
@@ -114,124 +165,162 @@
       filter: blur(0);
     }
 
-    #close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
-      color: white;
-      background: none;
-      border: none;
-      cursor: pointer;
+    #book-icon {
+      text-align: center;
+      margin-top: 10px;
+      display: none;
     }
   </style>
 </head>
+
 <body>
-  <div id="nameInputContainer">
-    <input type="text" id="usernameInput" placeholder="Enter your name" />
-    <button onclick="showDevotional()">See My Word</button>
+  <div id="loading-overlay">
+    <h1 class="main-text" style="font-size: 70px; color: #222;">john</h1>
+  </div>
+
+  <div id="name-prompt">
+    <h2>What’s your name?</h2>
+    <input type="text" id="name-input" placeholder="Type your name..." />
+    <button onclick="saveName()">Continue</button>
   </div>
 
   <h1 class="main-text fade-blur-in" id="username" style="display:none;"></h1>
   <h3 class="sub-text fade-blur-in" id="subtitle" style="display:none;">the word of today:</h3>
   <div id="devotional" class="fade-blur-in" style="display:none;"></div>
 
-  <div id="book-icon" onclick="showDevotionalBox()">📖</div>
+  <div id="book-icon">
+    <button id="show-devotional-btn" class="minimal-btn" title="Show devotional">📖</button>
+  </div>
 
   <div id="devotional-box">
-    <button id="close-btn" onclick="closeDevotionalBox()">✖️</button>
     <div id="devotional-text"></div>
+    <button id="close-devotional-btn" class="close-btn" title="Close">✖️</button>
   </div>
 
   <script>
-    const bibleVerses = [
-      "Psalm 23:1 – The Lord is my shepherd, I lack nothing.",
-      "John 3:16 – For God so loved the world...",
-      "Isaiah 41:10 – Do not fear, for I am with you.",
-      "Proverbs 3:5 – Trust in the Lord with all your heart.",
-      "Romans 8:28 – All things work together for good...",
-      "Matthew 5:14 – You are the light of the world.",
-      "Joshua 1:9 – Be strong and courageous.",
-      "Philippians 4:13 – I can do all things through Christ...",
-      "Hebrews 11:1 – Faith is the assurance of things hoped for...",
-      "1 Peter 5:7 – Cast all your anxiety on Him...",
-      "John 8:12 – I am the light of the world...",
-      "2 Corinthians 5:7 – For we live by faith, not by sight.",
-      "Lamentations 3:23 – His mercies are new every morning.",
-      "Jeremiah 29:11 – I know the plans I have for you...",
-      "Mark 11:24 – Whatever you ask for in prayer, believe...",
-      "Psalm 46:1 – God is our refuge and strength...",
-      "Colossians 1:11 – Strengthened with all power...",
-      "Psalm 37:4 – Delight yourself in the Lord..."
-    ];
-
-    const devotionals = [
-      "When David called the Lord his Shepherd, he acknowledged his total dependence on Him. Trust like a sheep; follow with faith.",
-      "God's love is deeper than oceans and higher than skies. You are loved beyond measure.",
-      "God walks beside you in the storm. Do not fear. He holds your right hand.",
-      "Trust isn't about knowing the way. It's about knowing God knows the way.",
-      "Even in what seems bad, God is weaving a beautiful ending. Hold on.",
-      "Let your light shine today. Someone needs your glow.",
-      "Be bold. God is with you, before you, and behind you.",
-      "Christ strengthens you for more than survival—He enables victory.",
-      "Faith is choosing hope even when you can’t see the outcome.",
-      "Lay it all before God. He cares more than you imagine.",
-      "Jesus lights your way. Walk with Him, and you'll never stumble.",
-      "Walk by faith, even if your knees shake.",
-      "Each morning is a new chance. His mercy resets your soul.",
-      "God's plan is filled with hope, purpose, and future. You’re not lost.",
-      "Believe it, pray it, expect it—miracles start with faith.",
-      "In chaos, God remains your calm. Lean into Him.",
-      "Strengthened from the inside out—you are ready for today.",
-      "Joy comes when you find delight not in the world, but in the Lord."
-    ];
-
-    let index = Math.floor(Math.random() * bibleVerses.length);
-
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const namePrompt = document.getElementById('name-prompt');
     const usernameEl = document.getElementById('username');
     const subtitleEl = document.getElementById('subtitle');
     const devotionalEl = document.getElementById('devotional');
-    const bookIcon = document.getElementById('book-icon');
+    const showBtn = document.getElementById('show-devotional-btn');
+    const closeBtn = document.getElementById('close-devotional-btn');
     const devotionalBox = document.getElementById('devotional-box');
     const devotionalText = document.getElementById('devotional-text');
+    const bookIcon = document.getElementById('book-icon');
 
-    function showDevotional() {
-      const nameInput = document.getElementById('usernameInput').value.trim();
-      if (!nameInput) return;
-
-      document.getElementById('nameInputContainer').style.display = 'none';
-
-      usernameEl.textContent = `Hello, ${nameInput}`;
-      devotionalEl.textContent = bibleVerses[index];
-
+    function showDevotional(username) {
+      usernameEl.textContent = `Hello, ${username}`;
       usernameEl.style.display = 'block';
       subtitleEl.style.display = 'block';
       devotionalEl.style.display = 'block';
       bookIcon.style.display = 'block';
+
+      usernameEl.classList.add('fade-blur-in');
+      subtitleEl.classList.add('fade-blur-in');
+      devotionalEl.classList.add('fade-blur-in');
 
       setTimeout(() => {
         usernameEl.classList.add('show');
         subtitleEl.classList.add('show');
         devotionalEl.classList.add('show');
       }, 100);
+
+      const bibleVerses = [
+        "Psalm 23:1 – The Lord is my shepherd, I lack nothing.",
+        "John 3:16 – For God so loved the world that he gave his one and only Son...",
+        "Isaiah 41:10 – Do not fear, for I am with you...",
+        "Proverbs 3:5 – Trust in the Lord with all your heart...",
+        "Romans 8:28 – All things work together for good...",
+        "Matthew 5:14 – You are the light of the world.",
+        "Joshua 1:9 – Be strong and courageous.",
+        "Philippians 4:13 – I can do all things through Christ...",
+        "Hebrews 11:1 – Faith is the assurance of things hoped for...",
+        "1 Peter 5:7 – Cast all your anxiety on Him...",
+        "John 8:12 – I am the light of the world...",
+        "2 Corinthians 5:7 – We live by faith, not by sight.",
+        "Lamentations 3:23 – His mercies are new every morning.",
+        "Jeremiah 29:11 – Plans to give you hope and a future.",
+        "Mark 11:24 – Believe you’ve received it, and it will be yours.",
+        "Psalm 46:1 – God is our refuge and strength.",
+        "Philippians 4:13 – I can do all things through Christ who strengthens me.",
+        "Psalm 37:4 – Delight in the Lord, and He will give you the desires of your heart."
+      ];
+
+      const devotionals = [
+        "God provides for every need. Rest in His peace today.",
+        "You are deeply loved. Let this truth shape your life.",
+        "He is with you in your struggles. Don't be afraid.",
+        "God sees what you can't. Trust and follow.",
+        "Even chaos can serve His purpose. Keep loving Him.",
+        "Let your light guide others to God today.",
+        "Courage is faith in motion. Keep going.",
+        "Your strength comes from Christ—face today boldly.",
+        "Faith isn't about sight, it's about trust.",
+        "He cares. Talk to Him. Rest in Him.",
+        "Jesus brings light into your darkness today.",
+        "Walk by faith and not by feelings.",
+        "Today is a fresh start. God is faithful.",
+        "He has a plan—and it's good.",
+        "Pray boldly and believe deeply. It is yours.",
+        "Let God shelter you. He is near.",
+        "Christ is your strength—there's nothing you can't face.",
+        "Joy comes from delighting in God first."
+      ];
+
+      const today = new Date().toISOString().slice(0, 10);
+      const seed = parseInt(today.replace(/-/g, ""));
+      const index = seed % bibleVerses.length;
+      devotionalEl.textContent = bibleVerses[index];
+
+      showBtn.onclick = () => {
+        devotionalText.textContent = devotionals[index];
+        devotionalBox.classList.add('fade-in-devotional');
+        devotionalBox.style.display = 'block';
+
+        setTimeout(() => {
+          devotionalBox.classList.add('show');
+        }, 50);
+      };
+
+      closeBtn.onclick = () => {
+        devotionalBox.classList.remove('show');
+        setTimeout(() => {
+          devotionalBox.style.display = 'none';
+          devotionalBox.classList.remove('fade-in-devotional');
+        }, 300);
+      };
     }
 
-    function showDevotionalBox() {
-      devotionalText.textContent = devotionals[index];
-      devotionalBox.classList.add('fade-in-devotional');
-      devotionalBox.style.display = 'block';
-      setTimeout(() => {
-        devotionalBox.classList.add('show');
-      }, 50);
+    function saveName() {
+      const input = document.getElementById('name-input').value.trim();
+      if (!input) return alert('Please enter your name.');
+
+      localStorage.setItem('user', input);
+      namePrompt.style.display = 'none';
+      showDevotional(input);
     }
 
-    function closeDevotionalBox() {
-      devotionalBox.classList.remove('show');
+    window.addEventListener('load', () => {
+      loadingOverlay.style.opacity = '1';
+      loadingOverlay.style.filter = 'blur(0)';
+
       setTimeout(() => {
-        devotionalBox.style.display = 'none';
-        devotionalBox.classList.remove('fade-in-devotional');
-      }, 300);
-    }
+        loadingOverlay.style.transition = 'opacity 1.5s ease, filter 1.5s ease';
+        loadingOverlay.style.opacity = '0';
+        loadingOverlay.style.filter = 'blur(8px)';
+
+        loadingOverlay.addEventListener('transitionend', () => {
+          loadingOverlay.style.display = 'none';
+          const storedName = localStorage.getItem('user');
+          if (storedName) {
+            showDevotional(storedName);
+          } else {
+            namePrompt.style.display = 'flex';
+          }
+        }, { once: true });
+      }, 2000);
+    });
   </script>
 </body>
 </html>
