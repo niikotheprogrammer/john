@@ -1,5 +1,4 @@
-
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8" />
@@ -50,15 +49,12 @@
       padding: 6px;
       color: #222;
       transition: transform 0.2s ease;
-      background-color: #324960
-      border-radius: 5px
-      
+      background-color: #324960;
+      border-radius: 5px;
     }
 
     .minimal-btn:hover {
       transform: scale(1.1);
-      
-      
     }
 
     .close-btn {
@@ -128,8 +124,6 @@
       text-align: center;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-    
-   
 
     #name-prompt button {
       margin-top: 15px;
@@ -146,6 +140,34 @@
 
     #name-prompt button:hover {
       background-color: #555;
+    }
+
+    #language-prompt {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 100px;
+      font-family: 'Times New Roman', Times, serif;
+      letter-spacing: -2px;
+      user-select: none;
+    }
+
+    #language-prompt button {
+      margin: 8px 10px;
+      padding: 10px 25px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background-color: #324960;
+      color: white;
+      cursor: pointer;
+      font-family: 'Times New Roman', Times, serif;
+      letter-spacing: -1.5px;
+      transition: background-color 0.3s ease;
+    }
+
+    #language-prompt button:hover {
+      background-color: #1e2a38;
     }
 
     .fade-blur-in {
@@ -181,15 +203,22 @@
 </head>
 
 <body>
- 
   <div id="loading-overlay">
     <h1 class="main-text" style="font-size: 70px; color: #222;">john</h1>
+  </div>
+
+  <div id="language-prompt">
+    <h2>Please select your language / Por favor, escolha seu idioma</h2>
+    <div>
+      <button id="lang-en-btn">English</button>
+      <button id="lang-pt-btn">Português</button>
+    </div>
   </div>
 
   <div id="name-prompt">
     <h2>What’s your name?</h2>
     <input type="text" id="name-input" placeholder="Type your name..." />
-    <button onclick="saveName()">Continue</button>
+    <button id="name-continue-btn">Continue</button>
   </div>
 
   <h1 class="main-text fade-blur-in" id="username" style="display:none;"></h1>
@@ -207,7 +236,11 @@
 
   <script>
     const loadingOverlay = document.getElementById('loading-overlay');
+    const languagePrompt = document.getElementById('language-prompt');
+    const langEnBtn = document.getElementById('lang-en-btn');
+    const langPtBtn = document.getElementById('lang-pt-btn');
     const namePrompt = document.getElementById('name-prompt');
+    const nameContinueBtn = document.getElementById('name-continue-btn');
     const usernameEl = document.getElementById('username');
     const subtitleEl = document.getElementById('subtitle');
     const devotionalEl = document.getElementById('devotional');
@@ -217,9 +250,167 @@
     const devotionalText = document.getElementById('devotional-text');
     const bookIcon = document.getElementById('book-icon');
 
-    
+    // Data for both languages
+    const data = {
+      en: {
+        bibleVerses: [
+          "Psalm 23:1 – The Lord is my shepherd, I lack nothing.",
+          "John 3:16 – For God so loved the world...",
+          "Isaiah 41:10 – Do not fear, for I am with you.",
+          "Proverbs 3:5 – Trust in the Lord with all your heart.",
+          "Romans 8:28 – All things work together for good...",
+          "Matthew 5:14 – You are the light of the world.",
+          "Joshua 1:9 – Be strong and courageous.",
+          "Philippians 4:13 – I can do all things through Christ...",
+          "Hebrews 11:1 – Faith is the assurance of things hoped for...",
+          "1 Peter 5:7 – Cast all your anxiety on Him...",
+          "John 8:12 – I am the light of the world...",
+          "Lamentations 3:22–23 – His mercies are new every morning.",
+          "Psalm 46:1 – God is our refuge and strength.",
+          "2 Timothy 1:7 – God gave us a spirit of power and love.",
+          "James 1:5 – If any of you lacks wisdom, ask God...",
+          "1 Corinthians 13:13 – Faith, hope and love remain...",
+          "Psalm 37:4 – Delight yourself in the Lord...",
+          "Isaiah 40:31 – Those who hope in the Lord will renew their strength.",
+          "Romans 12:12 – Be joyful in hope, patient in affliction...",
+          "Psalm 119:105 – Your word is a lamp to my feet...",
+          "Matthew 11:28 – Come to me, all who are weary...",
+          "Colossians 3:2 – Set your minds on things above...",
+          "Galatians 5:22 – The fruit of the Spirit is love, joy, peace...",
+          "Romans 5:8 – While we were still sinners, Christ died for us.",
+          "John 14:27 – Peace I leave with you; My peace I give you.",
+          "Psalm 34:18 – The Lord is close to the brokenhearted.",
+          "Ephesians 2:10 – You are God’s masterpiece...",
+          "Micah 6:8 – Act justly, love mercy, walk humbly with your God."
+        ],
+        devotionals: [
+          "God provides for every need—physically, emotionally, and spiritually. When life feels uncertain, rest in the truth that He is already working behind the scenes. His peace is available to you right now. Breathe deeply and lean into His faithfulness.",
+          "You are deeply, eternally loved by the One who formed you. Let this truth be your anchor today. No mistake, no past, no fear can separate you from His love. Walk confidently in the identity He has given you.",
+          "You may feel overwhelmed or alone, but you are never forsaken. God is walking with you in your struggles, holding your hand even when you can’t feel it. His strength is made perfect in your weakness.",
+          "God sees beyond what you can understand today. He knows your story from beginning to end. Trust Him when the road is unclear. He is guiding you step by step into something better than you imagined.",
+          "Even the chaos in your life is not wasted in God’s hands. Every trial can grow your faith, shape your heart, and reveal His goodness. Keep your eyes on Him and continue to love Him through it all.",
+          "You are the light of the world because Christ shines in you. Let your actions, your words, and your presence reflect His love to those around you today. Even small kindnesses can lead someone closer to God.",
+          "Courage isn’t the absence of fear—it’s faith in motion. Stand strong today, not because you are fearless, but because you know Who walks beside you. Keep pressing forward. He will not let you fall.",
+          "You are not alone in your journey. Christ is your constant source of strength and confidence. When you feel weak, call on Him. Face the challenges of today boldly, knowing you are never fighting alone.",
+          "Faith is not about seeing the outcome—it's about trusting the One who controls it. Don’t wait for signs to believe. Hold tight to God’s promises, even in the waiting, and watch Him move mountains.",
+          "God invites you to cast your cares upon Him. Don’t carry the weight alone. Speak to Him, rest in Him, and believe that He hears every word you whisper. He is near and He cares deeply for you.",
+          "Jesus lights your path in the darkest moments. You don’t have to stumble in confusion or fear. Stay close to His presence, and His light will lead you one step at a time. You are not lost—you are guided.",
+          "No matter how yesterday looked, today is a fresh start. God’s mercy covers your mistakes and renews your heart. Embrace the new morning with faith, knowing He is still writing your story.",
+          "In every storm, God stands unshaken as your shelter. You can run to Him, and you’ll always find safety. His strength never fails and His presence never leaves. Hold fast to Him today.",
+          "You have power. You have love. And you have self-control—because God placed His Spirit in you. Reject fear and walk boldly, filled with divine confidence and peace.",
+          "When you’re unsure what to do, simply ask God. He gives wisdom without judgment. He wants to guide your choices and bless your path. Trust that He’ll give the answers in His time.",
+          "Love is the greatest of all things. Today, choose to love deeply, forgive freely, and believe in hope. These are the things that last forever and connect us to God’s heart.",
+          "When you seek joy in God—not just in your circumstances—you’ll find lasting peace. Delight in Him and He will shape your desires to align with His perfect plan.",
+          "Strength doesn’t come from pushing harder—it comes from waiting on God. When you feel tired, pause. Let Him refill your spirit. He will lift you up, just like His Word promises.",
+          "Hold on to joy, even in difficult seasons. Be patient and faithful—God sees your endurance. Your hope will not be in vain, because He always comes through.",
+          "God’s Word lights every step—even the ones you’re afraid to take. Keep it close to your heart, and trust that He will never lead you where His grace won’t keep you.",
+          "If you’re tired, burdened, or weary—run to Jesus. He invites you to rest in Him, to let go of your worries, and to find soul-deep peace that the world can’t give.",
+          "Let your mind rise above the noise of this world. Think on what is eternal, true, and good. God invites you to set your focus on Him—where hope and clarity are found.",
+          "When you walk with the Spirit, your life bears fruit that blesses others. Stay rooted in God’s presence, and you’ll naturally overflow with love, joy, peace, and more.",
+          "Christ didn’t wait for us to be perfect—He loved us while we were still broken. His love is not earned. It's freely given. Receive that grace today with a grateful heart.",
+          "God’s peace isn’t like the world’s—fragile and short-lived. His peace steadies your soul, calms your thoughts, and protects your heart. Take it with you wherever you go.",
+          "When your heart is shattered, God draws near. You are never too broken to be healed. He is the comforter of the crushed and the lifter of your head.",
+          "You are created with purpose, crafted by God's own hands. You are His masterpiece, unique and irreplaceable. Let that truth give you strength and confidence today.",
+          "God doesn’t want your performance—He wants your heart. Walk humbly with Him today. Show justice, offer mercy, and let your life reflect His goodness to the world."
+        ]
+      },
+      pt: {
+        bibleVerses: [
+          "Salmo 23:1 – O Senhor é o meu pastor, nada me faltará.",
+          "João 3:16 – Porque Deus amou o mundo de tal maneira...",
+          "Isaías 41:10 – Não temas, porque eu estou contigo.",
+          "Provérbios 3:5 – Confia no Senhor de todo o teu coração.",
+          "Romanos 8:28 – Todas as coisas cooperam para o bem...",
+          "Mateus 5:14 – Vós sois a luz do mundo.",
+          "Josué 1:9 – Sê forte e corajoso.",
+          "Filipenses 4:13 – Posso todas as coisas naquele que me fortalece...",
+          "Hebreus 11:1 – A fé é a certeza das coisas que se esperam...",
+          "1 Pedro 5:7 – Lance sobre Ele toda a vossa ansiedade...",
+          "João 8:12 – Eu sou a luz do mundo...",
+          "Lamentações 3:22–23 – As misericórdias do Senhor são a causa de não sermos consumidos.",
+          "Salmo 46:1 – Deus é nosso refúgio e fortaleza.",
+          "2 Timóteo 1:7 – Deus nos deu espírito de poder, amor e moderação.",
+          "Tiago 1:5 – Se alguém tem falta de sabedoria, peça a Deus...",
+          "1 Coríntios 13:13 – Agora permanecem a fé, a esperança e o amor...",
+          "Salmo 37:4 – Deleita-te também no Senhor...",
+          "Isaías 40:31 – Os que esperam no Senhor renovarão as suas forças.",
+          "Romanos 12:12 – Alegrai-vos na esperança, sede pacientes na tribulação...",
+          "Salmo 119:105 – Lâmpada para os meus pés é tua palavra...",
+          "Mateus 11:28 – Vinde a mim, todos os que estais cansados...",
+          "Colossenses 3:2 – Pensai nas coisas que são de cima...",
+          "Gálatas 5:22 – O fruto do Espírito é amor, alegria, paz...",
+          "Romanos 5:8 – Cristo morreu por nós enquanto ainda éramos pecadores.",
+          "João 14:27 – Deixo-vos a paz, a minha paz vos dou.",
+          "Salmo 34:18 – Perto está o Senhor dos que têm o coração quebrantado.",
+          "Efésios 2:10 – Somos feitura dele, criados em Cristo Jesus...",
+          "Miquéias 6:8 – Praticar a justiça, amar a misericórdia e andar humildemente com Deus."
+        ],
+        devotionals: [
+          "Deus provê para toda necessidade — física, emocional e espiritual. Quando a vida parece incerta, descanse na verdade de que Ele já está agindo nos bastidores. Sua paz está disponível para você agora. Respire fundo e confie na fidelidade dEle.",
+          "Você é profundamente, eternamente amado por Aquele que te formou. Deixe essa verdade ser sua âncora hoje. Nenhum erro, passado ou medo pode separar você do amor Dele. Ande confiante na identidade que Ele te deu.",
+          "Você pode se sentir sobrecarregado ou sozinho, mas nunca está abandonado. Deus caminha com você nas suas lutas, segurando sua mão mesmo quando não sente. A força Dele se aperfeiçoa na sua fraqueza.",
+          "Deus vê além do que você entende hoje. Ele conhece sua história do começo ao fim. Confie nEle quando o caminho estiver incerto. Ele guia passo a passo para algo melhor do que você imagina.",
+          "Mesmo o caos na sua vida não é perdido nas mãos de Deus. Cada provação pode fortalecer sua fé, moldar seu coração e revelar a bondade Dele. Mantenha seus olhos nEle e continue amando-o em tudo.",
+          "Você é a luz do mundo porque Cristo brilha em você. Que suas ações, palavras e presença reflitam o amor Dele para quem está ao seu redor hoje. Até pequenos gestos podem aproximar alguém de Deus.",
+          "Coragem não é ausência de medo — é fé em ação. Fique firme hoje, não porque não tem medo, mas porque sabe Quem anda ao seu lado. Continue avançando. Ele não permitirá que você caia.",
+          "Você não está sozinho na jornada. Cristo é sua fonte constante de força e confiança. Quando estiver fraco, invoque-o. Enfrente os desafios de hoje com ousadia, sabendo que nunca luta sozinho.",
+          "Fé não é ver o resultado — é confiar naquele que controla tudo. Não espere sinais para crer. Segure firme as promessas de Deus, mesmo na espera, e veja Ele mover montanhas.",
+          "Deus convida você a lançar suas preocupações sobre Ele. Não carregue o peso sozinho. Fale com Ele, descanse nEle e creia que Ele ouve cada palavra sua. Ele está perto e se importa profundamente.",
+          "Jesus ilumina seu caminho nos momentos mais escuros. Você não precisa tropeçar na confusão ou no medo. Fique perto da presença Dele, e Sua luz guiará um passo de cada vez. Você não está perdido — está guiado.",
+          "Não importa como foi ontem, hoje é um novo começo. A misericórdia de Deus cobre seus erros e renova seu coração. Abrace a manhã com fé, sabendo que Ele ainda está escrevendo sua história.",
+          "Em toda tempestade, Deus permanece inabalável como seu abrigo. Você pode correr para Ele e sempre encontrará segurança. Sua força nunca falha e Sua presença nunca falta. Segure-se firme hoje.",
+          "Você tem poder, amor e autocontrole — porque Deus colocou Seu Espírito em você. Rejeite o medo e caminhe com confiança divina e paz.",
+          "Quando não souber o que fazer, peça a Deus. Ele dá sabedoria sem julgamentos. Quer guiar suas escolhas e abençoar seu caminho. Confie que Ele dará as respostas no tempo certo.",
+          "O amor é a maior de todas as coisas. Hoje, escolha amar profundamente, perdoar livremente e acreditar na esperança. Essas são coisas que duram para sempre e nos conectam ao coração de Deus.",
+          "Quando você busca a alegria em Deus — não apenas nas circunstâncias — encontrará paz duradoura. Deleite-se nEle e Ele moldará seus desejos para alinhar com Seu plano perfeito.",
+          "Força não vem de empurrar mais forte — vem de esperar em Deus. Quando estiver cansado, pare. Deixe Ele renovar seu espírito. Ele te levantará, como promete em Sua Palavra.",
+          "Agarre-se à alegria, mesmo nas dificuldades. Seja paciente e fiel — Deus vê sua perseverança. Sua esperança não será em vão, porque Ele sempre cumpre.",
+          "A Palavra de Deus ilumina cada passo — mesmo os que você tem medo de dar. Mantenha-a perto do coração e confie que Ele nunca te levará onde Sua graça não protegerá.",
+          "Se você está cansado, sobrecarregado ou fatigado — corra para Jesus. Ele te convida a descansar nEle, a largar suas preocupações e a encontrar uma paz profunda que o mundo não pode dar.",
+          "Deixe sua mente se elevar acima do barulho do mundo. Pense no que é eterno, verdadeiro e bom. Deus te convida a focar nEle — onde a esperança e a clareza são encontradas.",
+          "Quando você anda com o Espírito, sua vida produz frutos que abençoam outros. Permaneça enraizado na presença de Deus e naturalmente transbordará amor, alegria, paz e mais.",
+          "Cristo não esperou que fôssemos perfeitos — Ele nos amou mesmo quando estávamos quebrados. Seu amor não é ganho, é dado gratuitamente. Receba essa graça hoje com um coração agradecido.",
+          "A paz de Deus não é como a do mundo — frágil e passageira. Sua paz acalma sua alma, tranquiliza seus pensamentos e protege seu coração. Leve-a com você onde quer que vá.",
+          "Quando seu coração está partido, Deus se aproxima. Você nunca está quebrado demais para ser curado. Ele é o consolador dos aflitos e aquele que levanta sua cabeça.",
+          "Você foi criado com propósito, moldado pelas mãos de Deus. Você é Sua obra-prima, único e insubstituível. Que essa verdade lhe dê força e confiança hoje.",
+          "Deus não quer sua performance — Ele quer seu coração. Ande humildemente com Ele hoje. Pratique a justiça, ofereça misericórdia e deixe sua vida refletir a bondade Dele para o mundo."
+        ]
+      }
+    };
+
+    let selectedLang = null;
+
+    // Show language prompt
+    function showLanguagePrompt() {
+      languagePrompt.style.display = 'flex';
+      namePrompt.style.display = 'none';
+      usernameEl.style.display = 'none';
+      subtitleEl.style.display = 'none';
+      devotionalEl.style.display = 'none';
+      bookIcon.style.display = 'none';
+      devotionalBox.style.display = 'none';
+    }
+
+    // Show name prompt
+    function showNamePrompt() {
+      languagePrompt.style.display = 'none';
+      namePrompt.style.display = 'flex';
+      usernameEl.style.display = 'none';
+      subtitleEl.style.display = 'none';
+      devotionalEl.style.display = 'none';
+      bookIcon.style.display = 'none';
+      devotionalBox.style.display = 'none';
+    }
+
+    // Show devotional UI
     function showDevotional(username) {
+      namePrompt.style.display = 'none';
+      languagePrompt.style.display = 'none';
+
       usernameEl.textContent = `Hello, ${username}`;
+      if (selectedLang === 'pt') {
+        usernameEl.textContent = `Olá, ${username}`;
+      }
       usernameEl.style.display = 'block';
       subtitleEl.style.display = 'block';
       devotionalEl.style.display = 'block';
@@ -235,72 +426,15 @@
         devotionalEl.classList.add('show');
       }, 100);
 
-      const bibleVerses = [
-  "Psalm 23:1 – The Lord is my shepherd, I lack nothing.",
-  "John 3:16 – For God so loved the world...",
-  "Isaiah 41:10 – Do not fear, for I am with you.",
-  "Proverbs 3:5 – Trust in the Lord with all your heart.",
-  "Romans 8:28 – All things work together for good...",
-  "Matthew 5:14 – You are the light of the world.",
-  "Joshua 1:9 – Be strong and courageous.",
-  "Philippians 4:13 – I can do all things through Christ...",
-  "Hebrews 11:1 – Faith is the assurance of things hoped for...",
-  "1 Peter 5:7 – Cast all your anxiety on Him...",
-  "John 8:12 – I am the light of the world...",
-  "Lamentations 3:22–23 – His mercies are new every morning.",
-  "Psalm 46:1 – God is our refuge and strength.",
-  "2 Timothy 1:7 – God gave us a spirit of power and love.",
-  "James 1:5 – If any of you lacks wisdom, ask God...",
-  "1 Corinthians 13:13 – Faith, hope and love remain...",
-  "Psalm 37:4 – Delight yourself in the Lord...",
-  "Isaiah 40:31 – Those who hope in the Lord will renew their strength.",
-  "Romans 12:12 – Be joyful in hope, patient in affliction...",
-  "Psalm 119:105 – Your word is a lamp to my feet...",
-  "Matthew 11:28 – Come to me, all who are weary...",
-  "Colossians 3:2 – Set your minds on things above...",
-  "Galatians 5:22 – The fruit of the Spirit is love, joy, peace...",
-  "Romans 5:8 – While we were still sinners, Christ died for us.",
-  "John 14:27 – Peace I leave with you; My peace I give you.",
-  "Psalm 34:18 – The Lord is close to the brokenhearted.",
-  "Ephesians 2:10 – You are God’s masterpiece...",
-  "Micah 6:8 – Act justly, love mercy, walk humbly with your God."
-];
-      
-
-      const devotionals = [
-  "God provides for every need—physically, emotionally, and spiritually. When life feels uncertain, rest in the truth that He is already working behind the scenes. His peace is available to you right now. Breathe deeply and lean into His faithfulness.",
-  "You are deeply, eternally loved by the One who formed you. Let this truth be your anchor today. No mistake, no past, no fear can separate you from His love. Walk confidently in the identity He has given you.",
-  "You may feel overwhelmed or alone, but you are never forsaken. God is walking with you in your struggles, holding your hand even when you can’t feel it. His strength is made perfect in your weakness.",
-  "God sees beyond what you can understand today. He knows your story from beginning to end. Trust Him when the road is unclear. He is guiding you step by step into something better than you imagined.",
-  "Even the chaos in your life is not wasted in God’s hands. Every trial can grow your faith, shape your heart, and reveal His goodness. Keep your eyes on Him and continue to love Him through it all.",
-  "You are the light of the world because Christ shines in you. Let your actions, your words, and your presence reflect His love to those around you today. Even small kindnesses can lead someone closer to God.",
-  "Courage isn’t the absence of fear—it’s faith in motion. Stand strong today, not because you are fearless, but because you know Who walks beside you. Keep pressing forward. He will not let you fall.",
-  "You are not alone in your journey. Christ is your constant source of strength and confidence. When you feel weak, call on Him. Face the challenges of today boldly, knowing you are never fighting alone.",
-  "Faith is not about seeing the outcome—it's about trusting the One who controls it. Don’t wait for signs to believe. Hold tight to God’s promises, even in the waiting, and watch Him move mountains.",
-  "God invites you to cast your cares upon Him. Don’t carry the weight alone. Speak to Him, rest in Him, and believe that He hears every word you whisper. He is near and He cares deeply for you.",
-  "Jesus lights your path in the darkest moments. You don’t have to stumble in confusion or fear. Stay close to His presence, and His light will lead you one step at a time. You are not lost—you are guided.",
-  "No matter how yesterday looked, today is a fresh start. God’s mercy covers your mistakes and renews your heart. Embrace the new morning with faith, knowing He is still writing your story.",
-  "In every storm, God stands unshaken as your shelter. You can run to Him, and you’ll always find safety. His strength never fails and His presence never leaves. Hold fast to Him today.",
-  "You have power. You have love. And you have self-control—because God placed His Spirit in you. Reject fear and walk boldly, filled with divine confidence and peace.",
-  "When you’re unsure what to do, simply ask God. He gives wisdom without judgment. He wants to guide your choices and bless your path. Trust that He’ll give the answers in His time.",
-  "Love is the greatest of all things. Today, choose to love deeply, forgive freely, and believe in hope. These are the things that last forever and connect us to God’s heart.",
-  "When you seek joy in God—not just in your circumstances—you’ll find lasting peace. Delight in Him and He will shape your desires to align with His perfect plan.",
-  "Strength doesn’t come from pushing harder—it comes from waiting on God. When you feel tired, pause. Let Him refill your spirit. He will lift you up, just like His Word promises.",
-  "Hold on to joy, even in difficult seasons. Be patient and faithful—God sees your endurance. Your hope will not be in vain, because He always comes through.",
-  "God’s Word lights every step—even the ones you’re afraid to take. Keep it close to your heart, and trust that He will never lead you where His grace won’t keep you.",
-  "If you’re tired, burdened, or weary—run to Jesus. He invites you to rest in Him, to let go of your worries, and to find soul-deep peace that the world can’t give.",
-  "Let your mind rise above the noise of this world. Think on what is eternal, true, and good. God invites you to set your focus on Him—where hope and clarity are found.",
-  "When you walk with the Spirit, your life bears fruit that blesses others. Stay rooted in God’s presence, and you’ll naturally overflow with love, joy, peace, and more.",
-  "Christ didn’t wait for us to be perfect—He loved us while we were still broken. His love is not earned. It's freely given. Receive that grace today with a grateful heart.",
-  "God’s peace isn’t like the world’s—fragile and short-lived. His peace steadies your soul, calms your thoughts, and protects your heart. Take it with you wherever you go.",
-  "When your heart is shattered, God draws near. You are never too broken to be healed. He is the comforter of the crushed and the lifter of your head.",
-  "You are created with purpose, crafted by God's own hands. You are His masterpiece, unique and irreplaceable. Let that truth give you strength and confidence today.",
-  "God doesn’t want your performance—He wants your heart. Walk humbly with Him today. Show justice, offer mercy, and let your life reflect His goodness to the world."
-];
+      // Pick today's verse and devotional according to language
+      const bibleVerses = data[selectedLang].bibleVerses;
+      const devotionals = data[selectedLang].devotionals;
       const today = new Date().toISOString().slice(0, 10);
       const seed = parseInt(today.replace(/-/g, ""));
       const index = seed % bibleVerses.length;
+
       devotionalEl.textContent = bibleVerses[index];
+      devotionalText.textContent = '';
 
       showBtn.onclick = () => {
         devotionalText.textContent = devotionals[index];
@@ -323,12 +457,27 @@
 
     function saveName() {
       const input = document.getElementById('name-input').value.trim();
-      if (!input) return alert('Please enter your name.');
-
+      if (!input) {
+        alert(selectedLang === 'pt' ? 'Por favor, digite seu nome.' : 'Please enter your name.');
+        return;
+      }
       localStorage.setItem('user', input);
-      namePrompt.style.display = 'none';
       showDevotional(input);
     }
+
+    // Language selection buttons
+    langEnBtn.onclick = () => {
+      selectedLang = 'en';
+      localStorage.setItem('language', selectedLang);
+      showNamePrompt();
+    };
+    langPtBtn.onclick = () => {
+      selectedLang = 'pt';
+      localStorage.setItem('language', selectedLang);
+      showNamePrompt();
+    };
+
+    nameContinueBtn.onclick = saveName;
 
     window.addEventListener('load', () => {
       loadingOverlay.style.opacity = '1';
@@ -341,11 +490,17 @@
 
         loadingOverlay.addEventListener('transitionend', () => {
           loadingOverlay.style.display = 'none';
+
+          selectedLang = localStorage.getItem('language');
           const storedName = localStorage.getItem('user');
-          if (storedName) {
+
+          if (!selectedLang) {
+            // Show language selection first visit
+            showLanguagePrompt();
+          } else if (storedName) {
             showDevotional(storedName);
           } else {
-            namePrompt.style.display = 'flex';
+            showNamePrompt();
           }
         }, { once: true });
       }, 2000);
