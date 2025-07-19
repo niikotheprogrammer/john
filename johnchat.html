@@ -49,8 +49,12 @@
       padding: 6px;
       color: #222;
       transition: transform 0.2s ease;
-      background-color: #324960;
-      border-radius: 5px;
+      background-color: #0401c457;
+      backdrop-filter: blur(40px);
+      border-top: 2px solid #22222211;
+      border-left: 2px solid #6c66c523 ;
+      box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.171);
+      border-radius: 10px;
     }
 
     .minimal-btn:hover {
@@ -199,6 +203,7 @@
       text-align: center;
       margin-top: 10px;
       display: none;
+      backdrop-filter: blur(1.2px);
     }
     
     /* Modern language prompt card */
@@ -223,6 +228,8 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   text-align: center;
 }
+
+
 
 .language-title {
   font-family: 'Times New Roman', Times, serif;
@@ -253,11 +260,14 @@
   gap: 18px;
   justify-content: center;
   width: 100%;
+
 }
 
 .language-btn {
   flex: 1;
-  background: #2563eb; /* blue-600 */
+  background: #2564eb3b;
+  backdrop-filter: blur(20px);
+  border-top: 1px solid #eceded3d; /* blue-600 */
   color: white;
   border: none;
   border-radius: 12px;
@@ -281,6 +291,8 @@
   background: #1e40af; /* blue-800 */
   transform: scale(0.98);
 }
+
+
 
 /* Animation keyframes */
 @keyframes fadeSlideUp {
@@ -313,6 +325,9 @@
   <div id="loading-overlay">
     <h1 class="main-text" style="font-size: 70px; color: #222;">john</h1>
   </div>
+
+
+
 
   <!-- Replace this block in <body> -->
 <div id="language-prompt" class="language-card">
