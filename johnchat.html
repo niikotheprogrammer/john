@@ -150,8 +150,6 @@
       font-family: 'Times New Roman', Times, serif;
       letter-spacing: -2px;
       user-select: none;
-      font-weight: 300;
-      
     }
 
     #language-prompt button {
@@ -201,6 +199,104 @@
       margin-top: 10px;
       display: none;
     }
+    
+    /* Modern language prompt card */
+.language-card {
+  display: none; /* default hidden, shown via JS */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  z-index: 10000;
+  padding: 40px 30px;
+  box-sizing: border-box;
+  max-width: 420px;
+  margin: auto;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  animation: fadeSlideUp 0.8s ease forwards;
+  user-select: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.language-title {
+  font-weight: 600;
+  font-size: 1.9rem;
+  color: #1f2937; /* dark slate */
+  letter-spacing: 0.06rem;
+  margin-bottom: 8px;
+}
+
+.language-subtitle {
+  font-weight: 500;
+  font-size: 1.2rem;
+  color: #4b5563; /* cool gray */
+  margin-bottom: 28px;
+  font-style: italic;
+}
+
+.language-buttons {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  width: 100%;
+}
+
+.language-btn {
+  flex: 1;
+  background: #2563eb; /* blue-600 */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgb(37 99 235 / 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.language-btn:hover,
+.language-btn:focus {
+  background: #1d4ed8; /* blue-700 */
+  outline: none;
+  transform: scale(1.05);
+}
+
+.language-btn:active {
+  background: #1e40af; /* blue-800 */
+  transform: scale(0.98);
+}
+
+/* Animation keyframes */
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .language-card {
+    max-width: 90vw;
+    padding: 30px 20px;
+  }
+
+  .language-btn {
+    font-size: 1rem;
+    padding: 12px 0;
+  }
+}
   </style>
 </head>
 
@@ -209,14 +305,15 @@
     <h1 class="main-text" style="font-size: 70px; color: #222;">john</h1>
   </div>
 
-  <div id="language-prompt">
-    <h2>Please select your language / Por favor, escolha seu idioma</h2>
-    <div>
-      <button id="lang-en-btn">English</button>
-      <button id="lang-pt-btn">Português</button>
-    </div>
+  <!-- Replace this block in <body> -->
+<div id="language-prompt" class="language-card">
+  <h2 class="language-title">Please select your language</h2>
+  <h3 class="language-subtitle">Por favor, escolha seu idioma</h3>
+  <div class="language-buttons">
+    <button id="lang-en-btn" class="language-btn">English</button>
+    <button id="lang-pt-btn" class="language-btn">Português</button>
   </div>
-
+</div>
   <div id="name-prompt">
     <h2>What’s your name?</h2>
     <input type="text" id="name-input" placeholder="Type your name..." />
@@ -510,5 +607,3 @@
   </script>
 </body>
 </html>
-      
-        
